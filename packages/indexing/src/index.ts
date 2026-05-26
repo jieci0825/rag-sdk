@@ -1,5 +1,5 @@
-import type { RagDocument } from "@rag-sdk/core";
+import type { RagDocument } from '@rag-sdk/core'
 
 export interface Indexer {
-  index(documents: RagDocument[]): Promise<void> | void;
+    index(documents: RagDocument[]): Promise<void> | void
 }

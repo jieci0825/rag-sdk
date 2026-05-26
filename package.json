@@ -1,0 +1,9 @@
+{
+    "name": "rag-sdk",
+    "private": true,
+    "version": "0.0.0",
+    "scripts": {
+        "build": "pnpm -r build",
+        "clean": "pnpm -r clean"
+    }
+}

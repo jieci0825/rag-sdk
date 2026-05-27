@@ -1,5 +1,4 @@
 export * from './chunkers';
-export * from './documents';
 export * from './embeddings';
 export * from './loaders';
 export * from './metadata';

@@ -1,6 +1,6 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
-import { jsonValueSchema } from './json';
+import { jsonValueSchema } from './json'
 
 export const documentSchema = z
     .object({
@@ -9,4 +9,4 @@ export const documentSchema = z
         metadata: jsonValueSchema.optional(),
         source: z.string().optional(),
     })
-    .strict();
+    .strict()

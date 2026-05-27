@@ -1,5 +1,5 @@
-import type { ChunkEmbedding } from '../embeddings';
+import type { ChunkEmbedding } from '../embeddings'
 
 export interface IndexStore<TResult = void> {
-    store(embeddings: ChunkEmbedding[]): Promise<TResult>;
+    store(embeddings: ChunkEmbedding[]): Promise<TResult>
 }

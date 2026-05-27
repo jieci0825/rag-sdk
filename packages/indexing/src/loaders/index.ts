@@ -1,1 +1,1 @@
-export type { DocumentLoader } from './loader';
+export type { DocumentLoader } from './loader'

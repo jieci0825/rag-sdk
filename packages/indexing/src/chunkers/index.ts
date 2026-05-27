@@ -1,1 +1,1 @@
-export type { DocumentChunker } from './chunker';
+export type { DocumentChunker } from './chunker'

@@ -1,3 +1,3 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
-export const jsonValueSchema = z.json();
+export const jsonValueSchema = z.json()

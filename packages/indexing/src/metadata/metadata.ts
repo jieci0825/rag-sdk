@@ -1,3 +1,3 @@
-import type { JsonValue } from '@rag-sdk/core';
+import type { JsonValue } from '@rag-sdk/core'
 
-export type IndexMetadata = Record<string, JsonValue>;
+export type IndexMetadata = Record<string, JsonValue>

@@ -1,6 +1,6 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
-import { jsonValueSchema } from './json';
+import { jsonValueSchema } from './json'
 
 export const chunkSchema = z
     .object({
@@ -8,4 +8,4 @@ export const chunkSchema = z
         content: z.string().min(1),
         metadata: jsonValueSchema.optional(),
     })
-    .strict();
+    .strict()

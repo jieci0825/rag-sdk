@@ -1,1 +1,1 @@
-export type { IndexMetadata } from './metadata';
+export type { IndexMetadata } from './metadata'

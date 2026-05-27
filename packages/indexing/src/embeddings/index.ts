@@ -1,1 +1,1 @@
-export type { ChunkEmbedding, ChunkEmbedder } from './embedding';
+export type { ChunkEmbedding, ChunkEmbedder } from './embedding'

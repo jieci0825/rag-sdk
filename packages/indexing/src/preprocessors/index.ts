@@ -1,1 +1,1 @@
-export type { DocumentPreprocessor } from './preprocessor';
+export type { DocumentPreprocessor } from './preprocessor'

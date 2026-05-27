@@ -1,1 +1,1 @@
-export type { IndexStore } from './store';
+export type { IndexStore } from './store'

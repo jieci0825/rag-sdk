@@ -1,5 +1,22 @@
 {
     "name": "@rag-sdk/adapters",
     "version": "0.0.0",
-    "private": true
+    "type": "module",
+    "main": "./dist/index.mjs",
+    "types": "./dist/index.d.mts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.mts",
+            "default": "./dist/index.mjs"
+        }
+    },
+    "scripts": {
+        "build": "tsdown",
+        "clean": "rm -rf dist"
+    },
+    "dependencies": {
+        "@langchain/core": "^1.1.48",
+        "@rag-sdk/indexing": "workspace:*",
+        "@rag-sdk/core": "workspace:*"
+    }
 }

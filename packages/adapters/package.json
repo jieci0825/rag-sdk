@@ -16,6 +16,10 @@
         "./langchain/loaders": {
             "types": "./dist/langchain/loaders/index.d.mts",
             "default": "./dist/langchain/loaders/index.mjs"
+        },
+        "./langchain/chunkers": {
+            "types": "./dist/langchain/chunkers/index.d.mts",
+            "default": "./dist/langchain/chunkers/index.mjs"
         }
     },
     "scripts": {

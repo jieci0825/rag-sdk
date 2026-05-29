@@ -6,5 +6,8 @@ export interface ChunkEmbedding {
 }
 
 export interface ChunkEmbedder {
+    /**
+     * 为 chunk 集合生成向量表示。
+     */
     embed(chunks: Chunk[]): Promise<ChunkEmbedding[]>
 }

@@ -8,6 +8,9 @@ import type { DocumentChunker } from '@rag-sdk/indexing'
  * 基于 LangChain TextSplitter 的文档切分适配器。
  */
 export class LangChainDocumentChunker implements DocumentChunker {
+    /**
+     * 使用指定 TextSplitter 创建文档切分适配器。
+     */
     constructor(private readonly splitter: LangChainTextSplitter) {}
 
     /**
@@ -34,5 +37,8 @@ export class LangChainDocumentChunker implements DocumentChunker {
 }
 
 export interface LangChainTextSplitter {
+    /**
+     * 将 LangChain 文档集合切分为更小的 LangChain 文档集合。
+     */
     splitDocuments(documents: LangChainDocument[]): Promise<LangChainDocument[]>
 }

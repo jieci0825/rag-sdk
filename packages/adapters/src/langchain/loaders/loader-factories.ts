@@ -9,8 +9,17 @@ import type { BaseDocumentLoader } from '@langchain/core/document_loaders/base'
 type SupportedExtension = '.md' | '.pdf' | '.txt'
 
 const loaderFactories: Record<SupportedExtension, (filePath: string) => BaseDocumentLoader> = {
+    /**
+     * 为 Markdown 文件创建纯文本加载器。
+     */
     '.md': (filePath) => new TextLoader(filePath),
+    /**
+     * 为 PDF 文件创建 PDF 加载器。
+     */
     '.pdf': (filePath) => new PDFLoader(filePath),
+    /**
+     * 为纯文本文件创建文本加载器。
+     */
     '.txt': (filePath) => new TextLoader(filePath),
 }
 

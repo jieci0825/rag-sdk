@@ -21,6 +21,12 @@ export interface IndexPipelineResult<TStoreResult = void> {
     result: TStoreResult
 }
 
+/**
+ * 按 loader、preprocessor、chunker、embedder、store 的顺序执行索引流水线。
+ *
+ * 每一步都会消费上一步的结果；预处理器按声明顺序串行执行，最终返回中间产物和存储结果，
+ * 方便调用方记录、调试或继续使用流水线输出。
+ */
 export async function executeIndexPipeline<TSource, TStoreResult>(
     pipeline: IndexPipeline<TSource, TStoreResult>,
     source: TSource,

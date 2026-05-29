@@ -13,6 +13,9 @@ describe('indexing pipeline', () => {
         const calls: string[] = []
 
         const loader: DocumentLoader<string> = {
+            /**
+             * 记录 loader 调用并返回来源内容对应的测试文档。
+             */
             async load(source) {
                 calls.push(`loader:${source}`)
 
@@ -25,6 +28,9 @@ describe('indexing pipeline', () => {
         }
 
         const preprocessor: DocumentPreprocessor = {
+            /**
+             * 记录 preprocessor 调用并为文档内容追加预处理标记。
+             */
             async preprocess(documents) {
                 calls.push('preprocessor')
 
@@ -36,6 +42,9 @@ describe('indexing pipeline', () => {
         }
 
         const chunker: DocumentChunker = {
+            /**
+             * 记录 chunker 调用并按文档顺序生成测试 chunk。
+             */
             async chunk(documents) {
                 calls.push('chunker')
 
@@ -47,6 +56,9 @@ describe('indexing pipeline', () => {
         }
 
         const embedder: ChunkEmbedder = {
+            /**
+             * 记录 embedder 调用并为每个 chunk 生成固定测试向量。
+             */
             async embed(chunks) {
                 calls.push('embedder')
 
@@ -58,6 +70,9 @@ describe('indexing pipeline', () => {
         }
 
         const store: IndexStore<{ count: number }> = {
+            /**
+             * 记录 store 调用并返回写入的 embedding 数量。
+             */
             async store(embeddings) {
                 calls.push('store')
 
@@ -106,6 +121,9 @@ describe('indexing pipeline', () => {
     it('没有预处理器时也可以直接执行', async () => {
         const pipeline: IndexPipeline<string, void> = {
             chunker: {
+                /**
+                 * 将测试文档直接映射为单个固定 id 的 chunk。
+                 */
                 async chunk(documents) {
                     return documents.map((document) => ({
                         content: document.content,
@@ -114,6 +132,9 @@ describe('indexing pipeline', () => {
                 },
             },
             embedder: {
+                /**
+                 * 为每个测试 chunk 生成固定的一维向量。
+                 */
                 async embed(chunks) {
                     return chunks.map((chunk) => ({
                         chunk,
@@ -122,6 +143,9 @@ describe('indexing pipeline', () => {
                 },
             },
             loader: {
+                /**
+                 * 返回无预处理器场景使用的固定测试文档。
+                 */
                 async load() {
                     return [
                         {
@@ -131,6 +155,9 @@ describe('indexing pipeline', () => {
                 },
             },
             store: {
+                /**
+                 * 模拟不返回业务结果的存储操作。
+                 */
                 async store() {
                     return
                 },

@@ -1,6 +1,10 @@
-import { CharacterTextSplitter, RecursiveCharacterTextSplitter } from '@langchain/classic/text_splitter'
+import { RecursiveCharacterTextSplitter } from '@langchain/classic/text_splitter'
 
 import { LangChainDocumentChunker } from './document-chunker'
+
+import type { TextLengthFunction } from './fixed-character-document-chunker'
+
+const defaultRecursiveChunkSize = 200
 
 const defaultRecursiveSeparators = [
     '\n# ',
@@ -27,29 +31,13 @@ const defaultRecursiveSeparators = [
 ]
 
 /**
- * 创建按固定字符长度切分文档的 LangChain chunker。
- */
-export function createFixedCharacterDocumentChunker(
-    options: FixedCharacterDocumentChunkerOptions,
-): LangChainDocumentChunker {
-    return new LangChainDocumentChunker(
-        new CharacterTextSplitter({
-            chunkOverlap: options.chunkOverlap ?? 0,
-            chunkSize: options.chunkSize,
-            lengthFunction: options.lengthFunction,
-            separator: '',
-        }),
-    )
-}
-
-/**
  * 创建按递归分隔符切分文档的 LangChain chunker。
  */
 export function createRecursiveDocumentChunker(options: RecursiveDocumentChunkerOptions): LangChainDocumentChunker {
     return new LangChainDocumentChunker(
         new RecursiveCharacterTextSplitter({
             chunkOverlap: options.chunkOverlap ?? 0,
-            chunkSize: options.chunkSize,
+            chunkSize: options.chunkSize ?? defaultRecursiveChunkSize,
             keepSeparator: options.keepSeparator ?? true,
             lengthFunction: options.lengthFunction,
             separators: options.separators ?? defaultRecursiveSeparators,
@@ -57,21 +45,28 @@ export function createRecursiveDocumentChunker(options: RecursiveDocumentChunker
     )
 }
 
-export interface FixedCharacterDocumentChunkerOptions {
-    chunkSize: number
-    chunkOverlap?: number
-    lengthFunction?: TextLengthFunction
-}
-
+/**
+ * 递归分隔符文档切分器配置。
+ */
 export interface RecursiveDocumentChunkerOptions {
-    chunkSize: number
+    /**
+     * 每个文本块的目标长度
+     */
+    chunkSize?: number
+    /**
+     * 相邻文本块之间保留的重叠长度。
+     */
     chunkOverlap?: number
+    /**
+     * 是否在切分结果中保留命中的分隔符。
+     */
     keepSeparator?: boolean
+    /**
+     * 自定义文本长度计算函数。
+     */
     lengthFunction?: TextLengthFunction
+    /**
+     * 递归切分时按优先级尝试的分隔符列表。
+     */
     separators?: string[]
 }
-
-/**
- * 计算文本长度，可用于覆盖 LangChain 默认的 chunk 大小判断。
- */
-export type TextLengthFunction = ((text: string) => number) | ((text: string) => Promise<number>)

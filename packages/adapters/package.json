@@ -12,6 +12,10 @@
         "./lang-chain": {
             "types": "./dist/lang-chain/index.d.mts",
             "default": "./dist/lang-chain/index.mjs"
+        },
+        "./langchain/loaders": {
+            "types": "./dist/langchain/loaders/index.d.mts",
+            "default": "./dist/langchain/loaders/index.mjs"
         }
     },
     "scripts": {
@@ -19,8 +23,12 @@
         "clean": "rm -rf dist"
     },
     "dependencies": {
+        "@langchain/classic": "^1.0.34",
+        "@langchain/community": "^1.1.28",
         "@langchain/core": "^1.1.48",
+        "@rag-sdk/core": "workspace:*",
         "@rag-sdk/indexing": "workspace:*",
-        "@rag-sdk/core": "workspace:*"
+        "@rag-sdk/utils": "workspace:*",
+        "pdf-parse": "^2.4.5"
     }
 }

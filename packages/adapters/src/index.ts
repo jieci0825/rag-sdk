@@ -4,6 +4,7 @@ export {
     createRecursiveDocumentChunker,
     LangChainDocumentChunker,
 } from './langchain/chunkers'
+export { LangChainChunkEmbedder } from './langchain/embeddings'
 export type {
     FixedCharacterDocumentChunkerOptions,
     LangChainTextSplitter,

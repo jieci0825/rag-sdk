@@ -20,6 +20,10 @@
         "./langchain/chunkers": {
             "types": "./dist/langchain/chunkers/index.d.mts",
             "default": "./dist/langchain/chunkers/index.mjs"
+        },
+        "./langchain/embeddings": {
+            "types": "./dist/langchain/embeddings/index.d.mts",
+            "default": "./dist/langchain/embeddings/index.mjs"
         }
     },
     "scripts": {

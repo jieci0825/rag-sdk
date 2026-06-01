@@ -3,7 +3,7 @@ export type { DocumentChunker } from './chunkers'
 export type { ChunkEmbedding, ChunkEmbedder } from './embeddings'
 export type { DocumentLoader } from './loaders'
 export type { IndexMetadata } from './metadata'
-export type { ChunkTransformer, DocumentTransformer } from './transformers'
+export type { ChunkTransformer, DocumentTransform, DocumentTransformer } from './transformers'
 export type {
     IndexingMode,
     IndexPipeline,

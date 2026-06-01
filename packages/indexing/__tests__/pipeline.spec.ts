@@ -208,4 +208,76 @@ describe('executeIndexPipeline', () => {
             'store:document a b chunk c d',
         ])
     })
+
+    it('支持 loader 之后的 documentTransforms 流程', async () => {
+        const pipeline: IndexPipeline<string, string> = {
+            chunker: {
+                /**
+                 * 验证文档转换结果会传递给 chunker。
+                 */
+                async chunk(documents) {
+                    expect(documents[0].content).toBe('line 1\nline 2')
+
+                    return [
+                        {
+                            content: documents[0].content,
+                            id: 'chunk-1',
+                        },
+                    ]
+                },
+            },
+            documentTransforms: [
+                {
+                    /**
+                     * 模拟 loader 后的文档标准化处理。
+                     */
+                    async transform(documents) {
+                        return documents.map((document) => ({
+                            ...document,
+                            content: 'line 1\nline 2',
+                        }))
+                    },
+                },
+            ],
+            embedder: {
+                /**
+                 * 返回测试向量集合。
+                 */
+                async embed(chunks) {
+                    return [
+                        {
+                            chunk: chunks[0],
+                            embedding: [0.1],
+                        },
+                    ]
+                },
+            },
+            loader: {
+                /**
+                 * 返回待标准化的原始文档。
+                 */
+                async load() {
+                    return [
+                        {
+                            content: 'line 1\r\nline 2   ',
+                            id: 'doc-1',
+                        },
+                    ]
+                },
+            },
+            store: {
+                /**
+                 * 返回测试存储结果。
+                 */
+                async store() {
+                    return 'stored'
+                },
+            },
+        }
+
+        const result = await executeIndexPipeline(pipeline, 'source')
+
+        expect(result.documents[0].content).toBe('line 1\nline 2')
+        expect(result.chunks[0].content).toBe('line 1\nline 2')
+    })
 })

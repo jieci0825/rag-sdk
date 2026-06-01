@@ -4,7 +4,13 @@ import type { DocumentChunker } from '../chunkers'
 import type { ChunkEmbedding, ChunkEmbedder } from '../embeddings'
 import type { DocumentLoader } from '../loaders'
 import type { DocumentPreprocessor } from '../preprocessors'
-import type { IndexStore } from '../stores'
+
+export interface IndexStore<TResult = void> {
+    /**
+     * 持久化 chunk embedding，并返回存储层结果。
+     */
+    store(embeddings: ChunkEmbedding[]): Promise<TResult>
+}
 
 export interface IndexPipeline<TSource = unknown, TStoreResult = void> {
     loader: DocumentLoader<TSource>

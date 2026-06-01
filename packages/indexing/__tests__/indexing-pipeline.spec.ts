@@ -5,8 +5,7 @@ import type { DocumentChunker } from '../src/chunkers'
 import type { ChunkEmbedder } from '../src/embeddings'
 import type { DocumentLoader } from '../src/loaders'
 import type { DocumentPreprocessor } from '../src/preprocessors'
-import type { IndexPipeline } from '../src/pipeline'
-import type { IndexStore } from '../src/stores'
+import type { IndexPipeline, IndexStore } from '../src/pipeline'
 
 describe('indexing pipeline', () => {
     it('按顺序执行 loader、preprocessor、chunker、embedder 和 store', async () => {

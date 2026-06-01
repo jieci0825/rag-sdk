@@ -11,5 +11,4 @@ export type {
     IndexStore,
     IndexStoreWriteContext,
 } from './pipeline'
-export type { DocumentPreprocessor } from './preprocessors'
 export type { VectorFilter, VectorFilterField, VectorFilterValue, VectorRecord, VectorStore } from './vector-stores'

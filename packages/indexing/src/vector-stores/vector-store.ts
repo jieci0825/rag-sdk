@@ -1,37 +1,6 @@
-import type { JsonValue } from '@rag-sdk/core'
+export type VectorFilter = any
 
-export type VectorFilterField = 'id' | 'documentId' | 'source' | 'fingerprint'
-
-export type VectorFilterValue = string
-
-export type VectorFilter =
-    | {
-          field: VectorFilterField
-          operator: 'eq'
-          value: VectorFilterValue
-      }
-    | {
-          field: VectorFilterField
-          operator: 'in'
-          value: VectorFilterValue[]
-      }
-
-export type VectorRecord = {
-    id: string
-    content: string
-    embedding: number[]
-    fingerprint: string
-    metadata?: JsonValue
-} & (
-    | {
-          documentId: string
-          source?: string
-      }
-    | {
-          documentId?: string
-          source: string
-      }
-)
+export type VectorRecord = any
 
 export interface VectorStore {
     /**

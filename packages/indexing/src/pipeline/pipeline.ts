@@ -3,7 +3,6 @@ import type { Chunk, Document } from '@rag-sdk/core'
 import type { DocumentChunker } from '../chunkers'
 import type { ChunkEmbedding, ChunkEmbedder } from '../embeddings'
 import type { DocumentLoader } from '../loaders'
-import type { DocumentPreprocessor } from '../preprocessors'
 
 export type IndexingMode = 'append' | 'replace'
 
@@ -28,7 +27,6 @@ export interface IndexStore<TResult = void> {
 
 export interface IndexPipeline<TSource = unknown, TStoreResult = void> {
     loader: DocumentLoader<TSource>
-    preprocessors?: DocumentPreprocessor[]
     chunker: DocumentChunker
     embedder: ChunkEmbedder
     store: IndexStore<TStoreResult>
@@ -53,10 +51,6 @@ export async function executeIndexPipeline<TSource, TStoreResult>(
     options?: IndexPipelineOptions,
 ): Promise<IndexPipelineResult<TStoreResult>> {
     let documents = await pipeline.loader.load(source)
-
-    for (const preprocessor of pipeline.preprocessors ?? []) {
-        documents = await preprocessor.preprocess(documents)
-    }
 
     const chunks = await pipeline.chunker.chunk(documents)
     const embeddings = await pipeline.embedder.embed(chunks)

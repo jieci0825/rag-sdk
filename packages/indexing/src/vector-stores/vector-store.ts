@@ -1,3 +1,7 @@
+export type VectorFilterField = string
+
+export type VectorFilterValue = any
+
 export type VectorFilter = any
 
 export type VectorRecord = any

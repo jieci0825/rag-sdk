@@ -1,2 +1,9 @@
 export { executeIndexPipeline } from './pipeline'
-export type { IndexPipeline, IndexPipelineResult, IndexStore } from './pipeline'
+export type {
+    IndexingMode,
+    IndexPipeline,
+    IndexPipelineOptions,
+    IndexPipelineResult,
+    IndexStore,
+    IndexStoreWriteContext,
+} from './pipeline'

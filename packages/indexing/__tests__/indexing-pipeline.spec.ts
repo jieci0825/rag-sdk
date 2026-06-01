@@ -5,11 +5,12 @@ import type { DocumentChunker } from '../src/chunkers'
 import type { ChunkEmbedder } from '../src/embeddings'
 import type { DocumentLoader } from '../src/loaders'
 import type { DocumentPreprocessor } from '../src/preprocessors'
-import type { IndexPipeline, IndexStore } from '../src/pipeline'
+import type { IndexPipeline, IndexStore, IndexStoreWriteContext } from '../src/pipeline'
 
 describe('indexing pipeline', () => {
     it('按顺序执行 loader、preprocessor、chunker、embedder 和 store', async () => {
         const calls: string[] = []
+        let storeContext: IndexStoreWriteContext | undefined
 
         const loader: DocumentLoader<string> = {
             /**
@@ -72,8 +73,9 @@ describe('indexing pipeline', () => {
             /**
              * 记录 store 调用并返回写入的 embedding 数量。
              */
-            async store(embeddings) {
+            async store(embeddings, context) {
                 calls.push('store')
+                storeContext = context
 
                 return {
                     count: embeddings.length,
@@ -89,7 +91,14 @@ describe('indexing pipeline', () => {
             store,
         }
 
-        const result = await executeIndexPipeline(pipeline, 'source')
+        const result = await executeIndexPipeline(pipeline, 'source', {
+            writeContext: {
+                documentId: 'doc-1',
+                fingerprint: 'hash-1',
+                mode: 'replace',
+                source: 'docs/a.md',
+            },
+        })
 
         expect(calls).toEqual(['loader:source', 'preprocessor', 'chunker', 'embedder', 'store'])
         expect(result.documents).toEqual([
@@ -114,6 +123,13 @@ describe('indexing pipeline', () => {
         ])
         expect(result.result).toEqual({
             count: 1,
+        })
+        expect(storeContext).toEqual({
+            chunkIds: ['1'],
+            documentId: 'doc-1',
+            fingerprint: 'hash-1',
+            mode: 'replace',
+            source: 'docs/a.md',
         })
     })
 
@@ -168,5 +184,6 @@ describe('indexing pipeline', () => {
         expect(result.documents).toHaveLength(1)
         expect(result.chunks).toHaveLength(1)
         expect(result.embeddings).toHaveLength(1)
+        expect(result.result).toBeUndefined()
     })
 })

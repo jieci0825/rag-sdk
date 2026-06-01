@@ -5,11 +5,25 @@ import type { ChunkEmbedding, ChunkEmbedder } from '../embeddings'
 import type { DocumentLoader } from '../loaders'
 import type { DocumentPreprocessor } from '../preprocessors'
 
+export type IndexingMode = 'append' | 'replace'
+
+export interface IndexStoreWriteContext {
+    mode?: IndexingMode
+    documentId?: string
+    source?: string
+    fingerprint?: string
+    chunkIds?: string[]
+}
+
+export interface IndexPipelineOptions {
+    writeContext?: Omit<IndexStoreWriteContext, 'chunkIds'>
+}
+
 export interface IndexStore<TResult = void> {
     /**
      * 持久化 chunk embedding，并返回存储层结果。
      */
-    store(embeddings: ChunkEmbedding[]): Promise<TResult>
+    store(embeddings: ChunkEmbedding[], context?: IndexStoreWriteContext): Promise<TResult>
 }
 
 export interface IndexPipeline<TSource = unknown, TStoreResult = void> {
@@ -36,6 +50,7 @@ export interface IndexPipelineResult<TStoreResult = void> {
 export async function executeIndexPipeline<TSource, TStoreResult>(
     pipeline: IndexPipeline<TSource, TStoreResult>,
     source: TSource,
+    options?: IndexPipelineOptions,
 ): Promise<IndexPipelineResult<TStoreResult>> {
     let documents = await pipeline.loader.load(source)
 
@@ -45,7 +60,10 @@ export async function executeIndexPipeline<TSource, TStoreResult>(
 
     const chunks = await pipeline.chunker.chunk(documents)
     const embeddings = await pipeline.embedder.embed(chunks)
-    const result = await pipeline.store.store(embeddings)
+    const result = await pipeline.store.store(embeddings, {
+        ...options?.writeContext,
+        chunkIds: chunks.map((chunk) => chunk.id),
+    })
 
     return {
         chunks,

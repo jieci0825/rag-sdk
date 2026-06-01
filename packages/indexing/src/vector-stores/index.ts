@@ -1,5 +1,5 @@
-export { VectorIndexStore } from './vector-index-store'
 export type {
+    VectorFilterField,
     VectorFilter,
     VectorFilterValue,
     VectorRecord,

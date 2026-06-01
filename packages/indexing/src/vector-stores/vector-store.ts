@@ -1,25 +1,37 @@
 import type { JsonValue } from '@rag-sdk/core'
 
-export type VectorFilterValue = string | number | boolean
+export type VectorFilterField = 'id' | 'documentId' | 'source' | 'fingerprint'
+
+export type VectorFilterValue = string
 
 export type VectorFilter =
     | {
-          field: string
+          field: VectorFilterField
           operator: 'eq'
           value: VectorFilterValue
       }
     | {
-          field: string
+          field: VectorFilterField
           operator: 'in'
           value: VectorFilterValue[]
       }
 
-export interface VectorRecord {
+export type VectorRecord = {
     id: string
     content: string
     embedding: number[]
+    fingerprint: string
     metadata?: JsonValue
-}
+} & (
+    | {
+          documentId: string
+          source?: string
+      }
+    | {
+          documentId?: string
+          source: string
+      }
+)
 
 export interface VectorStore {
     /**
@@ -28,7 +40,7 @@ export interface VectorStore {
     upsert(records: VectorRecord[]): Promise<void>
 
     /**
-     * 根据记录 id 批量删除向量记录。
+     * 根据过滤条件删除向量记录。
      */
-    delete(ids: string[]): Promise<void>
+    deleteByFilter(filter: VectorFilter): Promise<void>
 }

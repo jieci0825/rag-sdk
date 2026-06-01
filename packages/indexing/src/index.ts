@@ -1,9 +1,15 @@
 export { executeIndexPipeline } from './pipeline'
-export { VectorIndexStore } from './vector-stores'
 export type { DocumentChunker } from './chunkers'
 export type { ChunkEmbedding, ChunkEmbedder } from './embeddings'
 export type { DocumentLoader } from './loaders'
 export type { IndexMetadata } from './metadata'
-export type { IndexPipeline, IndexPipelineResult, IndexStore } from './pipeline'
+export type {
+    IndexingMode,
+    IndexPipeline,
+    IndexPipelineOptions,
+    IndexPipelineResult,
+    IndexStore,
+    IndexStoreWriteContext,
+} from './pipeline'
 export type { DocumentPreprocessor } from './preprocessors'
-export type { VectorFilter, VectorFilterValue, VectorRecord, VectorStore } from './vector-stores'
+export type { VectorFilter, VectorFilterField, VectorFilterValue, VectorRecord, VectorStore } from './vector-stores'

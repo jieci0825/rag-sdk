@@ -19,6 +19,11 @@ export interface IndexStoreWriteContext {
      * 标识当前索引任务，便于存储层记录一次完整写入。
      */
     runId?: string
+
+    /**
+     * 记录本次由外部增量决策提前跳过的文档数量。
+     */
+    skippedCount?: number
 }
 
 export interface IndexPipelineOptions {

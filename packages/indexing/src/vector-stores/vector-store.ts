@@ -1,13 +1,23 @@
 import type { ChunkEmbedding } from '../embeddings'
+import type { IndexMetadata } from '../metadata'
 import type { IndexStoreResult, IndexStoreWriteContext } from '../pipeline'
 
-export type VectorFilterField = string
+export interface VectorRecord {
+    id: string
+    documentId: string
+    content: string
+    embedding: number[]
+    metadata: IndexMetadata
+    sourceId?: string
+    chunkIndex?: number
+    contentHash?: string
+}
 
-export type VectorFilterValue = any
+export type VectorFilterField = keyof VectorRecord
 
-export type VectorFilter = any
+export type VectorFilterValue = VectorRecord[VectorFilterField]
 
-export type VectorRecord = any
+export type VectorFilter = Partial<VectorRecord>
 
 export interface VectorStore {
     /**
@@ -27,10 +37,33 @@ export interface VectorStore {
 }
 
 /**
+ * 将单个 chunk embedding 映射为底层向量存储记录。
+ */
+export function toVectorRecord(chunkEmbedding: ChunkEmbedding): VectorRecord {
+    return {
+        content: chunkEmbedding.chunk.content,
+        ...(chunkEmbedding.chunk.contentHash ? { contentHash: chunkEmbedding.chunk.contentHash } : {}),
+        documentId: chunkEmbedding.chunk.documentId,
+        embedding: chunkEmbedding.embedding,
+        id: chunkEmbedding.chunk.id,
+        metadata: chunkEmbedding.chunk.metadata ?? {},
+        ...(typeof chunkEmbedding.chunk.chunkIndex === 'number' ? { chunkIndex: chunkEmbedding.chunk.chunkIndex } : {}),
+        ...(chunkEmbedding.chunk.sourceId ? { sourceId: chunkEmbedding.chunk.sourceId } : {}),
+    }
+}
+
+/**
+ * 将当前批次的 chunk embeddings 映射为可写入向量存储的记录集合。
+ */
+export function toVectorRecords(embeddings: ChunkEmbedding[]): VectorRecord[] {
+    return embeddings.map(toVectorRecord)
+}
+
+/**
  * 根据当前写入批次收集需要先删除的文档标识。
  */
-export function collectDocumentIdsForVectorStoreWrite(embeddings: ChunkEmbedding[]): string[] {
-    return [...new Set(embeddings.map((embedding) => embedding.chunk.documentId))]
+export function collectDocumentIdsForVectorStoreWrite(records: VectorRecord[]): string[] {
+    return [...new Set(records.map((record) => record.documentId))]
 }
 
 /**
@@ -41,19 +74,19 @@ export async function writeVectorStore(
     embeddings: ChunkEmbedding[],
     context?: IndexStoreWriteContext,
 ): Promise<IndexStoreResult> {
-    const deletedDocumentIds =
-        context?.mode === 'replaceDocument' ? collectDocumentIdsForVectorStoreWrite(embeddings) : []
+    const records = toVectorRecords(embeddings)
+    const deletedDocumentIds = context?.mode === 'replaceDocument' ? collectDocumentIdsForVectorStoreWrite(records) : []
 
     if (deletedDocumentIds.length > 0) {
         await store.deleteByDocumentIds(deletedDocumentIds)
     }
 
-    await store.upsert(embeddings)
+    await store.upsert(records)
 
     return {
         added: embeddings.length,
         deleted: deletedDocumentIds.length,
-        skipped: 0,
+        skipped: context?.skippedCount ?? 0,
         updated: 0,
     }
 }

@@ -1,19 +1,19 @@
 import { describe, expect, it } from 'vitest'
 
-import { executeIndexPipeline } from '../src'
+import { executeIndexPipeline, toVectorRecords } from '../src'
 
 import type { Chunk, Document } from '@rag-sdk/core'
-import type { ChunkEmbedding, IndexPipeline, IndexStore } from '../src'
+import type { ChunkEmbedding, IndexPipeline, IndexStore, VectorRecord } from '../src'
 
 class ReplaceDocumentTestStore implements IndexStore {
     deletedDocumentIds: string[] = []
-    storedEmbeddings: ChunkEmbedding[] = []
+    storedRecords: VectorRecord[] = []
 
     /**
      * 模拟向量存储按 documentId 删除并写入 embedding。
      */
-    async upsert(records: ChunkEmbedding[]): Promise<void> {
-        this.storedEmbeddings = records
+    async upsert(records: VectorRecord[]): Promise<void> {
+        this.storedRecords = records
     }
 
     /**
@@ -87,8 +87,8 @@ describe('executeIndexPipeline', () => {
                 /**
                  * 验证基础写入会直接 upsert 当前批次 embedding。
                  */
-                async upsert(inputEmbeddings) {
-                    expect(inputEmbeddings).toBe(embeddings)
+                async upsert(inputRecords) {
+                    expect(inputRecords).toEqual(toVectorRecords(embeddings))
                 },
                 /**
                  * append 模式下不应触发文档级删除。
@@ -234,8 +234,8 @@ describe('executeIndexPipeline', () => {
                 /**
                  * 记录 upsert 输入。
                  */
-                async upsert(embeddings) {
-                    events.push(`upsert:${embeddings[0].chunk.content}`)
+                async upsert(records) {
+                    events.push(`upsert:${records[0].content}`)
                 },
                 /**
                  * 默认追加模式不会删除旧文档。
@@ -412,7 +412,34 @@ describe('executeIndexPipeline', () => {
         })
 
         expect(store.deletedDocumentIds).toEqual(['doc-1', 'doc-2'])
-        expect(store.storedEmbeddings).toHaveLength(3)
+        expect(store.storedRecords).toEqual(
+            toVectorRecords([
+                {
+                    chunk: {
+                        content: 'chunk 1',
+                        documentId: 'doc-1',
+                        id: 'chunk-1',
+                    },
+                    embedding: [0],
+                },
+                {
+                    chunk: {
+                        content: 'chunk 2',
+                        documentId: 'doc-1',
+                        id: 'chunk-2',
+                    },
+                    embedding: [1],
+                },
+                {
+                    chunk: {
+                        content: 'chunk 3',
+                        documentId: 'doc-2',
+                        id: 'chunk-3',
+                    },
+                    embedding: [2],
+                },
+            ]),
+        )
         expect(result.result).toEqual({
             added: 3,
             deleted: 2,

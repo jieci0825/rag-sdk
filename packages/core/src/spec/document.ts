@@ -4,9 +4,10 @@ import { jsonValueSchema } from './json'
 
 export const documentSchema = z
     .object({
-        id: z.string().min(1).optional(),
+        id: z.string().min(1),
         content: z.string(),
-        metadata: jsonValueSchema.optional(),
-        source: z.string().optional(),
+        contentHash: z.string().optional(),
+        metadata: z.record(z.string(), jsonValueSchema).optional(),
+        sourceId: z.string().optional(),
     })
     .strict()

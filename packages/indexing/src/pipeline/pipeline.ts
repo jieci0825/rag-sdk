@@ -1,45 +1,53 @@
 import type { Chunk, Document } from '@rag-sdk/core'
 
+import { writeVectorStore } from '../vector-stores'
 import type { DocumentChunker } from '../chunkers'
 import type { ChunkEmbedding, ChunkEmbedder } from '../embeddings'
 import type { DocumentLoader } from '../loaders'
-import type { ChunkTransformer, DocumentTransform, DocumentTransformer } from '../transformers'
+import type { ChunkTransformer, DocumentTransform } from '../transformers'
+import type { VectorStore } from '../vector-stores'
 
-export type IndexingMode = 'append' | 'replace'
+export type IndexingMode = 'append' | 'replaceDocument'
 
 export interface IndexStoreWriteContext {
+    /**
+     * 控制当前批次的写入策略。
+     */
     mode?: IndexingMode
-    documentId?: string
-    source?: string
-    fingerprint?: string
-    chunkIds?: string[]
+
+    /**
+     * 标识当前索引任务，便于存储层记录一次完整写入。
+     */
+    runId?: string
 }
 
 export interface IndexPipelineOptions {
-    writeContext?: Omit<IndexStoreWriteContext, 'chunkIds'>
+    writeContext?: IndexStoreWriteContext
 }
 
-export interface IndexStore<TResult = void> {
-    /**
-     * 持久化 chunk embedding，并返回存储层结果。
-     */
-    store(embeddings: ChunkEmbedding[], context?: IndexStoreWriteContext): Promise<TResult>
+export interface IndexStoreResult {
+    added: number
+    updated: number
+    deleted: number
+    skipped: number
 }
 
-export interface IndexPipeline<TSource = unknown, TStoreResult = void> {
+export type IndexStore = VectorStore
+
+export interface IndexPipeline<TSource = unknown> {
     loader: DocumentLoader<TSource>
     documentTransforms?: DocumentTransform[]
     chunker: DocumentChunker
     chunkTransformers?: ChunkTransformer[]
     embedder: ChunkEmbedder
-    store: IndexStore<TStoreResult>
+    store: IndexStore
 }
 
-export interface IndexPipelineResult<TStoreResult = void> {
+export interface IndexPipelineResult {
     documents: Document[]
     chunks: Chunk[]
     embeddings: ChunkEmbedding[]
-    result: TStoreResult
+    result: IndexStoreResult
 }
 
 /**
@@ -48,11 +56,11 @@ export interface IndexPipelineResult<TStoreResult = void> {
  * 每一步都会消费上一步的结果；transformer 按声明顺序串行执行，最终返回中间产物和存储结果，
  * 方便调用方记录、调试或继续使用流水线输出。
  */
-export async function executeIndexPipeline<TSource, TStoreResult>(
-    pipeline: IndexPipeline<TSource, TStoreResult>,
+export async function executeIndexPipeline<TSource>(
+    pipeline: IndexPipeline<TSource>,
     source: TSource,
     options?: IndexPipelineOptions,
-): Promise<IndexPipelineResult<TStoreResult>> {
+): Promise<IndexPipelineResult> {
     // 获取通过 loader 加载的原始文档集合。
     let documents = await pipeline.loader.load(source)
 
@@ -67,10 +75,7 @@ export async function executeIndexPipeline<TSource, TStoreResult>(
     }
 
     const embeddings = await pipeline.embedder.embed(chunks)
-    const result = await pipeline.store.store(embeddings, {
-        ...options?.writeContext,
-        chunkIds: chunks.map((chunk) => chunk.id),
-    })
+    const result = await writeVectorStore(pipeline.store, embeddings, options?.writeContext)
 
     return {
         chunks,

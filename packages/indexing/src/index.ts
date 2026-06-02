@@ -1,4 +1,5 @@
 export { executeIndexPipeline } from './pipeline'
+export { collectDocumentIdsForVectorStoreWrite, writeVectorStore } from './vector-stores'
 export type { DocumentChunker } from './chunkers'
 export type { ChunkEmbedding, ChunkEmbedder } from './embeddings'
 export type { DocumentLoader } from './loaders'
@@ -10,6 +11,7 @@ export type {
     IndexPipelineOptions,
     IndexPipelineResult,
     IndexStore,
+    IndexStoreResult,
     IndexStoreWriteContext,
 } from './pipeline'
 export type { VectorFilter, VectorFilterField, VectorFilterValue, VectorRecord, VectorStore } from './vector-stores'

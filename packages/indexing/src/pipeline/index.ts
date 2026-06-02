@@ -5,5 +5,6 @@ export type {
     IndexPipelineOptions,
     IndexPipelineResult,
     IndexStore,
+    IndexStoreResult,
     IndexStoreWriteContext,
 } from './pipeline'

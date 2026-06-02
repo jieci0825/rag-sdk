@@ -12,8 +12,9 @@ export function toLangChainDocument(document: Document): LangChainDocument {
         id: document.id,
         metadata: {
             ...(isPlainObject(document.metadata) ? document.metadata : {}),
-            ...(document.id ? { documentId: document.id } : {}),
-            ...(document.source ? { source: document.source } : {}),
+            documentId: document.id,
+            ...(document.contentHash ? { contentHash: document.contentHash } : {}),
+            ...(document.sourceId ? { sourceId: document.sourceId } : {}),
         },
         pageContent: document.content,
     })
@@ -23,15 +24,26 @@ export function toLangChainDocument(document: Document): LangChainDocument {
  * 将 LangChain 切分结果转换为 core 包定义的 chunk 结构。
  * - 即得到这个结果，是为了实现流水线中的规范，以便于进行后续流程调用
  */
-export function toChunk(document: LangChainDocument, id: string, chunkIndex: number): Chunk {
+export function toChunk(document: LangChainDocument, identity: ChunkIdentity): Chunk {
     const metadata = {
         ...(isPlainObject(document.metadata) ? document.metadata : {}),
-        chunkIndex,
-    } as JsonValue
+        chunkIndex: identity.chunkIndex,
+    } as Record<string, JsonValue>
 
     return {
+        chunkIndex: identity.chunkIndex,
         content: document.pageContent,
-        id,
+        ...(typeof metadata.contentHash === 'string' ? { contentHash: metadata.contentHash } : {}),
+        documentId: identity.documentId,
+        id: identity.id,
         metadata,
+        ...(identity.sourceId ? { sourceId: identity.sourceId } : {}),
     }
+}
+
+export interface ChunkIdentity {
+    id: string
+    documentId: string
+    chunkIndex: number
+    sourceId?: string
 }

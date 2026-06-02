@@ -41,7 +41,7 @@ describe('LangChainDocumentChunker', () => {
                 metadata: {
                     category: 'note',
                 },
-                source: 'notes/a.txt',
+                sourceId: 'notes/a.txt',
             },
         ]
 
@@ -52,11 +52,13 @@ describe('LangChainDocumentChunker', () => {
         expect(receivedDocuments[0].metadata).toEqual({
             category: 'note',
             documentId: 'doc-1',
-            source: 'notes/a.txt',
+            sourceId: 'notes/a.txt',
         })
         expect(chunks).toEqual([
             {
+                chunkIndex: 0,
                 content: 'hello world chunk',
+                documentId: 'doc-1',
                 id: 'doc-1:0',
                 metadata: {
                     category: 'note',
@@ -68,13 +70,14 @@ describe('LangChainDocumentChunker', () => {
                             to: 2,
                         },
                     },
-                    source: 'notes/a.txt',
+                    sourceId: 'notes/a.txt',
                 },
+                sourceId: 'notes/a.txt',
             },
         ])
     })
 
-    it('没有 document id 时使用 source 生成稳定 chunk id', async () => {
+    it('为每个 chunk 写入稳定 id，并透传 documentId/sourceId/chunkIndex', async () => {
         const splitter: LangChainTextSplitter = {
             async splitDocuments(documents) {
                 return [
@@ -90,13 +93,38 @@ describe('LangChainDocumentChunker', () => {
         const chunks = await chunker.chunk([
             {
                 content: 'from source',
-                source: 'docs/source.txt',
+                id: 'doc-1',
+                sourceId: 'docs/source.txt',
             },
             {
                 content: 'from index',
+                id: 'doc-2',
             },
         ])
 
-        expect(chunks.map((chunk) => chunk.id)).toEqual(['docs/source.txt:0', '1:0'])
+        expect(chunks).toEqual([
+            {
+                chunkIndex: 0,
+                content: 'from source',
+                documentId: 'doc-1',
+                id: 'doc-1:0',
+                metadata: {
+                    documentId: 'doc-1',
+                    sourceId: 'docs/source.txt',
+                    chunkIndex: 0,
+                },
+                sourceId: 'docs/source.txt',
+            },
+            {
+                chunkIndex: 0,
+                content: 'from index',
+                documentId: 'doc-2',
+                id: 'doc-2:0',
+                metadata: {
+                    documentId: 'doc-2',
+                    chunkIndex: 0,
+                },
+            },
+        ])
     })
 })

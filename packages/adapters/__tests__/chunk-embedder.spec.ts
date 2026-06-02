@@ -30,14 +30,18 @@ describe('LangChainChunkEmbedder', () => {
         const embedder = new LangChainChunkEmbedder(embeddings)
         const chunks: Chunk[] = [
             {
+                chunkIndex: 0,
                 content: 'first chunk',
+                documentId: 'doc-1',
                 id: 'chunk-1',
                 metadata: {
                     chunkIndex: 0,
                 },
             },
             {
+                chunkIndex: 1,
                 content: 'second chunk',
+                documentId: 'doc-1',
                 id: 'chunk-2',
                 metadata: {
                     chunkIndex: 1,

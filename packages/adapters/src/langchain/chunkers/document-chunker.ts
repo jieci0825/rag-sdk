@@ -19,16 +19,22 @@ export class LangChainDocumentChunker implements DocumentChunker {
     async chunk(documents: Document[]): Promise<Chunk[]> {
         const chunks: Chunk[] = []
 
-        for (const [documentIndex, document] of documents.entries()) {
+        for (const document of documents) {
             const splitDocuments = await this.splitter.splitDocuments([toLangChainDocument(document)])
-            const documentKey = document.id ?? document.source ?? `${documentIndex}`
 
             for (const [chunkIndex, splitDocument] of splitDocuments.entries()) {
                 if (!splitDocument.pageContent) {
                     continue
                 }
 
-                chunks.push(toChunk(splitDocument, `${documentKey}:${chunkIndex}`, chunkIndex))
+                chunks.push(
+                    toChunk(splitDocument, {
+                        chunkIndex,
+                        documentId: document.id,
+                        id: `${document.id}:${chunkIndex}`,
+                        ...(document.sourceId ? { sourceId: document.sourceId } : {}),
+                    }),
+                )
             }
         }
 

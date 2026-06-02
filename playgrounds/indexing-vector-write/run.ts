@@ -8,12 +8,21 @@ import {
 
 import { OllamaEmbeddings } from './ollama-embeddings'
 
-const source = new URL('./fixtures/xiaomi-17-product.txt', import.meta.url).pathname
+// 加载的文件
+const sourceText = new URL('./fixtures/xiaomi-17-product.txt', import.meta.url).pathname
+const sourceMd = new URL('./fixtures/xiaomi-17-specs.md', import.meta.url).pathname
+const source = sourceMd
+
+// 存储
 const store = new InMemoryVectorStore()
+
+// 向量化
 const embeddings = new OllamaEmbeddings({
     baseUrl: process.env.OLLAMA_BASE_URL,
     model: process.env.OLLAMA_EMBEDDING_MODEL ?? 'qwen3-embedding:8b',
 })
+
+// 执行索引流水线
 const result = await executeIndexPipeline(
     {
         chunker: createRecursiveDocumentChunker({

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { InMemoryVectorStore } from '../src'
 
 describe('InMemoryVectorStore', () => {
-    it('按 id 覆盖 upsert，并支持 documentId 删除和最小 filter 删除', async () => {
+    it('按 id 覆盖 upsert，并支持 documentId 删除和可选 filter 删除', async () => {
         const store = new InMemoryVectorStore()
 
         await store.upsert([

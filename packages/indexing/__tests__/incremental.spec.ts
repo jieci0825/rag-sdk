@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { InMemoryVectorStore } from '@rag-sdk/adapters'
+import { InMemoryVectorStore } from '@rag-sdk/vector-stores'
 
 import { createDocumentHashIndexingPlan, executeIndexPipeline, getDocumentHashesForDocuments } from '../src'
 

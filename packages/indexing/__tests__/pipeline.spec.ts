@@ -23,12 +23,6 @@ class ReplaceDocumentTestStore implements IndexStore {
         this.deletedDocumentIds = documentIds
     }
 
-    /**
-     * 测试场景不需要 filter 删除能力。
-     */
-    async deleteByFilter(): Promise<void> {
-        throw new Error('Method not implemented.')
-    }
 }
 
 describe('executeIndexPipeline', () => {
@@ -95,12 +89,6 @@ describe('executeIndexPipeline', () => {
                  */
                 async deleteByDocumentIds() {
                     throw new Error('append mode should not delete documents')
-                },
-                /**
-                 * 测试场景不需要 filter 删除能力。
-                 */
-                async deleteByFilter() {
-                    throw new Error('Method not implemented.')
                 },
             },
         }
@@ -243,10 +231,6 @@ describe('executeIndexPipeline', () => {
                 async deleteByDocumentIds() {
                     events.push('deleteByDocumentIds')
                 },
-                /**
-                 * 测试场景不需要 filter 删除能力。
-                 */
-                async deleteByFilter() {},
             },
         }
 
@@ -331,12 +315,6 @@ describe('executeIndexPipeline', () => {
                  */
                 async deleteByDocumentIds() {
                     throw new Error('append mode should not delete documents')
-                },
-                /**
-                 * 测试场景不需要 filter 删除能力。
-                 */
-                async deleteByFilter() {
-                    throw new Error('Method not implemented.')
                 },
             },
         }

@@ -55,12 +55,6 @@ describe('vector store helpers', () => {
             async deleteByDocumentIds(documentIds) {
                 events.push(`delete:${documentIds.join(',')}`)
             },
-            /**
-             * 测试场景不需要 filter 删除能力。
-             */
-            async deleteByFilter() {
-                throw new Error('Method not implemented.')
-            },
         }
         const embeddings: ChunkEmbedding[] = [
             {

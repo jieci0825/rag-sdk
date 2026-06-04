@@ -5,7 +5,6 @@ export {
     LangChainDocumentChunker,
 } from './langchain/chunkers'
 export { LangChainChunkEmbedder } from './langchain/embeddings'
-export { InMemoryVectorStore } from './vector-stores'
 export type {
     FixedCharacterDocumentChunkerOptions,
     LangChainTextSplitter,

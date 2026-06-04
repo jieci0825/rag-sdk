@@ -9,6 +9,7 @@
     },
     "dependencies": {
         "@rag-sdk/adapters": "workspace:*",
-        "@rag-sdk/indexing": "workspace:*"
+        "@rag-sdk/indexing": "workspace:*",
+        "@rag-sdk/vector-stores": "workspace:*"
     }
 }

@@ -1,11 +1,17 @@
 import { isArray, isPlainObject } from '@rag-sdk/utils'
 
-import type { DocumentHashReader, VectorFilter, VectorFilterField, VectorRecord, VectorStore } from '@rag-sdk/indexing'
+import type {
+    DocumentHashReader,
+    FilterableVectorStore,
+    VectorFilter,
+    VectorFilterField,
+    VectorRecord,
+} from '@rag-sdk/indexing'
 
 /**
  * 基于内存 Map 的通用向量存储实现，用于验证索引写入与增量判断链路。
  */
-export class InMemoryVectorStore implements DocumentHashReader, VectorStore {
+export class InMemoryVectorStore implements DocumentHashReader, FilterableVectorStore {
     private readonly records = new Map<string, VectorRecord>()
 
     /**

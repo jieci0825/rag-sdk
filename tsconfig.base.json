@@ -9,6 +9,7 @@
             "@rag-sdk/core": ["packages/core/src/index.ts"],
             "@rag-sdk/indexing": ["packages/indexing/src/index.ts"],
             "@rag-sdk/adapters": ["packages/adapters/src/index.ts"],
+            "@rag-sdk/vector-stores": ["packages/vector-stores/src/index.ts"],
             "@rag-sdk/runtime": ["packages/runtime/src/index.ts"],
             "@rag-sdk/utils": ["packages/utils/src/index.ts"],
             "@rag-sdk/observability": ["packages/observability/src/index.ts"],

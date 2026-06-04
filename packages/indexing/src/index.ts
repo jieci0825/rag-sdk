@@ -25,4 +25,11 @@ export type {
     IndexStoreWriteContext,
 } from './pipeline'
 export type { DocumentHashIndexingPlan, DocumentHashReader, DocumentHashSummary } from './incremental'
-export type { VectorFilter, VectorFilterField, VectorFilterValue, VectorRecord, VectorStore } from './vector-stores'
+export type {
+    FilterableVectorStore,
+    VectorFilter,
+    VectorFilterField,
+    VectorFilterValue,
+    VectorRecord,
+    VectorStore,
+} from './vector-stores'

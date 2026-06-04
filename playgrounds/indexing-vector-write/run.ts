@@ -1,7 +1,7 @@
 import { executeIndexPipeline } from '@rag-sdk/indexing'
+import { InMemoryVectorStore } from '@rag-sdk/vector-stores'
 import {
     createRecursiveDocumentChunker,
-    InMemoryVectorStore,
     LangChainChunkEmbedder,
     LangChainDocumentLoader,
 } from '@rag-sdk/adapters'

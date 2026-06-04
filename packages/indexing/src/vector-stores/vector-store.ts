@@ -29,7 +29,9 @@ export interface VectorStore {
      * 根据文档标识删除该文档下的所有向量记录。
      */
     deleteByDocumentIds(documentIds: string[]): Promise<void>
+}
 
+export interface FilterableVectorStore extends VectorStore {
     /**
      * 根据过滤条件删除向量记录。
      */

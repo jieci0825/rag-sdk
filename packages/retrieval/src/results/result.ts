@@ -1,4 +1,4 @@
-import type { Chunk, JsonValue } from '@rag-sdk/core'
+import type { Chunk } from '@rag-sdk/core'
 
 import type { RetrievalQuery } from '../queries'
 
@@ -21,6 +21,14 @@ export interface Candidate {
      * 需要考虑来源检索器的差异。
      */
     score: number
+
+    /**
+     * 召回该候选的检索器标识。
+     *
+     * 用于调试、可观测性，也可配合后处理器实现按来源加权融合。
+     * 非必填，检索器实现可按需提供。
+     */
+    retrieverId?: string
 }
 
 /**

@@ -10,9 +10,5 @@
             "types": "./dist/index.d.mts",
             "default": "./dist/index.mjs"
         }
-    },
-    "scripts": {
-        "build": "tsdown",
-        "clean": "rm -rf dist"
     }
 }

@@ -4,7 +4,6 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "tsc -p tsconfig.json --noEmit",
         "smoke:index-vector-write": "node --no-warnings --experimental-strip-types --experimental-transform-types --loader ./scripts/source-loader.mjs ./indexing-vector-write/run.ts"
     },
     "dependencies": {

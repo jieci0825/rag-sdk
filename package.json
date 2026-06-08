@@ -2,9 +2,11 @@
     "name": "rag-sdk",
     "private": true,
     "version": "0.0.0",
+    "type": "module",
     "scripts": {
-        "build": "pnpm -r build",
-        "clean": "pnpm -r clean",
+        "build": "tsdown",
+        "clean": "rm -rf packages/*/dist",
+        "typecheck": "tsc --noEmit",
         "test": "vitest run"
     },
     "devDependencies": {

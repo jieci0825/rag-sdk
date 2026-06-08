@@ -26,10 +26,6 @@
             "default": "./dist/langchain/embeddings/index.mjs"
         }
     },
-    "scripts": {
-        "build": "tsdown",
-        "clean": "rm -rf dist"
-    },
     "dependencies": {
         "@langchain/classic": "^1.0.34",
         "@langchain/community": "^1.1.28",

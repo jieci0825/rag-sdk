@@ -10,10 +10,6 @@
             "default": "./dist/index.mjs"
         }
     },
-    "scripts": {
-        "build": "tsdown",
-        "clean": "rm -rf dist"
-    },
     "dependencies": {
         "@rag-sdk/core": "workspace:*"
     }

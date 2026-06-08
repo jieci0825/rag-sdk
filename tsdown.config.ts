@@ -2,6 +2,9 @@ import { defineConfig } from 'tsdown'
 
 export default defineConfig({
     entry: ['src/**/*.ts'],
-    unbundle: true,
     root: 'src',
+    unbundle: true,
+    workspace: {
+        include: ['packages/*'],
+    },
 })

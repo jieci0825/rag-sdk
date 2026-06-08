@@ -6,21 +6,22 @@
         "module": "ESNext",
         "moduleResolution": "Bundler",
         "paths": {
+            "@rag-sdk/adapters": ["packages/adapters/src/index.ts"],
             "@rag-sdk/core": ["packages/core/src/index.ts"],
             "@rag-sdk/indexing": ["packages/indexing/src/index.ts"],
-            "@rag-sdk/adapters": ["packages/adapters/src/index.ts"],
-            "@rag-sdk/vector-stores": ["packages/vector-stores/src/index.ts"],
-            "@rag-sdk/runtime": ["packages/runtime/src/index.ts"],
+            "@rag-sdk/retrieval": ["packages/retrieval/src/index.ts"],
             "@rag-sdk/utils": ["packages/utils/src/index.ts"],
-            "@rag-sdk/observability": ["packages/observability/src/index.ts"],
-            "@rag-sdk/eval": ["packages/eval/src/index.ts"]
+            "@rag-sdk/vector-stores": ["packages/vector-stores/src/index.ts"]
         },
+        "rootDir": ".",
         "strict": true,
         "declaration": true,
         "declarationMap": true,
+        "noEmit": true,
         "types": ["node"],
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true
-    }
+    },
+    "include": ["packages/*/src", "packages/*/__tests__", "playgrounds/**/*.ts", "tsdown.config.ts"]
 }
